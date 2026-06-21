@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Sessions</h2>
+
+<a href="{% url 'session_create' %}"
+   class="btn btn-primary mb-3">
+    Add Session
+</a>
+
+<table class="table table-bordered">
+
+    <tr>
+        <th>Name</th>
+        <th>Current</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for session in sessions %}
+
+    <tr>
+
+        <td>
+            {{ session.name }}
+        </td>
+
+        <td>
+
+            {% if session.is_current %}
+                ✅ Current
+            {% endif %}
+
+        </td>
+
+        <td>
+
+            <a href="{% url 'session_update' session.pk %}"
+               class="btn btn-warning btn-sm">
+                Edit
+            </a>
+
+            <a href="{% url 'session_delete' session.pk %}"
+               class="btn btn-danger btn-sm">
+                Delete
+            </a>
+
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endblock %}

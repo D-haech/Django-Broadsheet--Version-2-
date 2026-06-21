@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Terms</h2>
+
+<a href="{% url 'term_create' %}"
+   class="btn btn-primary mb-3">
+    Add Term
+</a>
+
+<table class="table table-bordered">
+
+    <thead>
+
+        <tr>
+
+            <th>Session</th>
+
+            <th>Term</th>
+
+            <th>Current</th>
+
+            <th>Actions</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for term in terms %}
+
+        <tr>
+
+            <td>
+                {{ term.session }}
+            </td>
+
+            <td>
+                {{ term.name }}
+            </td>
+
+            <td>
+                {% if term.is_current %}
+                    ✅ Current
+                {% endif %}
+            </td>
+
+            <td>
+
+                <a href="{% url 'term_update' term.pk %}"
+                   class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+
+                <a href="{% url 'term_delete' term.pk %}"
+                   class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="4">
+
+                No terms found.
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

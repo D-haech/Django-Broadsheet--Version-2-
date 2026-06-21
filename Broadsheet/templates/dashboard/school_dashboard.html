@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}
+School Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="mt-4">
+
+    <h2>School Dashboard</h2>
+
+    <hr>
+
+    <div class="row">
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5>Classes</h5>
+
+                    <p>
+                        Manage school classes.
+                    </p>
+
+                    <a
+                        href="{% url 'class_list' %}"
+                        class="btn btn-primary"
+                    >
+                        Open
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5>Subjects</h5>
+
+                    <p>
+                        Manage subjects.
+                    </p>
+
+                    <a
+                        href="{% url 'subject_list' %}"
+                        class="btn btn-primary"
+                    >
+                        Open
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5>Students</h5>
+
+                    <p>
+                        Manage students.
+                    </p>
+
+                    <a
+                        href="#"
+                        class="btn btn-primary"
+                    >
+                        Coming Soon
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card">
+
+                <div class="card-body">
+
+                    <h5>Teachers</h5>
+
+                    <p>
+                        Manage teachers.
+                    </p>
+
+                    <a
+                        href="{% url 'teacher_list' %}"
+                        class="btn btn-primary"
+                    >
+                        Open
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

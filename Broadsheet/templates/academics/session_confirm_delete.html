@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>
+    Delete Session?
+</h3>
+
+<p>
+    {{ object.name }}
+</p>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <button
+        type="submit"
+        class="btn btn-danger">
+        Delete
+    </button>
+
+    <a href="{% url 'session_list' %}"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>
+
+{% endblock %}

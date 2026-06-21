@@ -1,0 +1,32 @@
+# Python
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+*.manifest
+*.spec
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+
+# Virtualenv
+venv/
+ENV/
+env/
+environ/
+*.env
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# System
+.DS_Store
+Thumbs.db

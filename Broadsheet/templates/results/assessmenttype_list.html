@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Assessment Types</h2>
+
+<a href="{% url 'assessment_type_create' %}"
+   class="btn btn-primary mb-3">
+    Add Assessment Type
+</a>
+
+<table class="table table-bordered table-striped">
+
+    <thead>
+
+        <tr>
+
+            <th>Name</th>
+
+            <th>Maximum Score</th>
+
+            <th>Actions</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for assessment_type in assessment_types %}
+
+        <tr>
+
+            <td>
+                {{ assessment_type.name }}
+            </td>
+
+            <td>
+                {{ assessment_type.maximum_score }}
+            </td>
+
+            <td>
+
+                <a href="{% url 'assessment_type_update' assessment_type.pk %}"
+                   class="btn btn-warning btn-sm">
+                    Edit
+                </a>
+
+                <a href="{% url 'assessment_type_delete' assessment_type.pk %}"
+                   class="btn btn-danger btn-sm">
+                    Delete
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="3">
+
+                No assessment types found.
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

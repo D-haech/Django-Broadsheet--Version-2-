@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}
+Delete Assignment
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="card border-danger">
+
+        <div class="card-header bg-danger text-white">
+
+            Delete Assignment
+
+        </div>
+
+        <div class="card-body">
+
+            <p>
+
+                Are you sure you want to delete:
+
+            </p>
+
+            <p>
+
+                <strong>
+
+                    {{ object.school_class }}
+                    -
+                    {{ object.subject }}
+
+                </strong>
+
+            </p>
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <button type="submit"
+                        class="btn btn-danger">
+                    Delete
+                </button>
+
+                <a href="{% url 'teacher_assignments' object.teacher.pk %}"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between mb-3">
+
+        <h3>Teachers</h3>
+
+        <a href="{% url 'teacher_create' %}"
+           class="btn btn-primary">
+            Add Teacher
+        </a>
+
+    </div>
+
+    <table class="table table-bordered">
+
+        <thead>
+
+            <tr>
+
+                <th>Name</th>
+
+                <th>Username</th>
+
+                <th>Email</th>
+
+                <th> Actions </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for teacher in teachers %}
+
+            <tr>
+
+                <td>
+                    {{ teacher.user.get_full_name }}
+                </td>
+
+                <td>
+                    {{ teacher.user.username }}
+                </td>
+
+                <td>
+                    {{ teacher.user.email }}
+                </td>
+
+
+
+                <td>
+                        <a href="{% url 'teacher_update' teacher.pk %}"
+                            class="btn btn-warning btn-sm">
+                            Edit
+                        </a>
+
+                        <a href="{% url 'teacher_delete' teacher.pk %}"
+                        class="btn btn-danger btn-sm">
+                            Delete
+                        </a>
+
+                        <a href="{% url 'teacher_assignments' teacher.pk %}"
+                            class="btn btn-info btn-sm">
+                            Assignments
+                            </a>
+
+                    
+                    </td>
+
+
+
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="3">
+
+                    No teachers found.
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
