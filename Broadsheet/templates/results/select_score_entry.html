@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Score Entry</h2>
+
+<form method="get">
+
+    <div class="mb-3">
+
+        <label>Subject</label>
+
+        <select
+            name="subject"
+            class="form-control"
+            required>
+
+            {% for subject in subjects %}
+
+                <option value="{{ subject.pk }}">
+
+                    {{ subject }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Term</label>
+
+        <select
+            name="term"
+            class="form-control"
+            required>
+
+            {% for term in terms %}
+
+                <option value="{{ term.pk }}">
+
+                    {{ term }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Assessment</label>
+
+        <select
+            name="assessment"
+            class="form-control"
+            required>
+
+            {% for assessment in assessments %}
+
+                <option value="{{ assessment.pk }}">
+
+                    {{ assessment }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <button
+        type="submit"
+        class="btn btn-primary">
+
+        Continue
+
+    </button>
+
+</form>
+
+{% endblock %}

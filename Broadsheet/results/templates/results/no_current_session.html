@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+No Current Session
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="alert alert-warning">
+
+        <h4 class="alert-heading">
+            No Current Academic Session
+        </h4>
+
+        <p>
+            Your school has not selected an active academic session.
+        </p>
+
+        <p>
+            Please contact the school administrator to select the
+            current academic session before entering student scores.
+        </p>
+
+        <hr>
+
+        <a href="{% url 'teacher_subjects' %}"
+           class="btn btn-primary">
+            Back to My Subjects
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

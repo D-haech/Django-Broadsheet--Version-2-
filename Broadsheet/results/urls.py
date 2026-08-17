@@ -1,17 +1,27 @@
 from django.urls import path
 
+
 from .views import (
     AssessmentTypeListView,
     AssessmentTypeCreateView,
     AssessmentTypeUpdateView,
     AssessmentTypeDeleteView,
-    AssessmentCreateView,
-    AssessmentDeleteView,
     AssessmentListView,
+    AssessmentCreateView,
     AssessmentUpdateView,
+    AssessmentDeleteView,
+    TeacherSubjectListView,
+    BulkScoreEntryView,
+    AdminScoreEntryView,
+    SummaryBroadsheetView,
+    SummaryBroadsheetView,
+    CompleteBroadsheetView,
 )
 
 urlpatterns = [
+    # =========================
+    # Assessment Types
+    # =========================
     path(
         "assessment-types/",
         AssessmentTypeListView.as_view(),
@@ -32,6 +42,9 @@ urlpatterns = [
         AssessmentTypeDeleteView.as_view(),
         name="assessment_type_delete",
     ),
+    # =========================
+    # Assessments
+    # =========================
     path(
         "assessments/",
         AssessmentListView.as_view(),
@@ -51,5 +64,29 @@ urlpatterns = [
         "assessments/<int:pk>/delete/",
         AssessmentDeleteView.as_view(),
         name="assessment_delete",
+    ),
+    # =========================
+    # Teacher Score Entry
+    # =========================
+    path(
+        "my-subjects/",
+        TeacherSubjectListView.as_view(),
+        name="teacher_subjects",
+    ),
+    path(
+        "score-entry/<int:assignment_id>/",
+        BulkScoreEntryView.as_view(),
+        name="bulk_score_entry",
+    ),
+    path("admin-score-entry/", AdminScoreEntryView.as_view(), name="admin_score_entry"),
+    path(
+        "summary-broadsheet/",
+        SummaryBroadsheetView.as_view(),
+        name="summary_broadsheet",
+    ),
+    path(
+        "complete-broadsheet/",
+        CompleteBroadsheetView.as_view(),
+        name="complete_broadsheet",
     ),
 ]

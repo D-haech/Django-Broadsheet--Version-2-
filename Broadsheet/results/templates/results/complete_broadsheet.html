@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+
+{% block title %}
+Complete Broadsheet
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <h2>Complete Broadsheet</h2>
+
+    <div class="mb-3">
+
+        <strong>Session:</strong>
+        {{ session.name }}
+
+        &nbsp;&nbsp;&nbsp;
+
+        <strong>Term:</strong>
+        {{ term.name }}
+
+    </div>
+
+
+    <!-- CLASS SELECTION -->
+
+    <form method="get" class="row g-3 mb-4">
+
+        <div class="col-md-5">
+
+            <label class="form-label">
+                Class
+            </label>
+
+            <select
+                name="class"
+                class="form-select"
+                required
+            >
+
+                <option value="">
+                    -- Select Class --
+                </option>
+
+                {% for school_class in school_classes %}
+
+                    <option
+                        value="{{ school_class.id }}"
+                        {% if selected_class and selected_class.id == school_class.id %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ school_class.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="col-md-3 d-flex align-items-end">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                View Broadsheet
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if selected_class %}
+
+        <h4 class="mb-3">
+            {{ selected_class.name }}
+        </h4>
+
+
+        {% if rows %}
+
+            <div class="table-responsive">
+
+                <table
+                    class="table table-bordered table-striped align-middle"
+                >
+
+                    <thead>
+
+                        <!-- SUBJECT ROW -->
+
+                        <tr>
+
+                            <th
+                                rowspan="3"
+                                class="text-center"
+                            >
+                                #
+                            </th>
+
+                            <th
+                                rowspan="3"
+                                style="min-width: 180px;"
+                            >
+                                Student
+                            </th>
+
+
+                            {% for item in rows.0.results %}
+
+                                <th
+                                    colspan="20"
+                                    class="text-center"
+                                >
+                                    {{ item.subject.name }}
+                                </th>
+
+                            {% endfor %}
+
+                        </tr>
+
+
+                        <!-- ASSESSMENT TYPE ROW -->
+
+                        <tr>
+
+                            {% for item in rows.0.results %}
+
+                                {% for type_name, type_data in item.result.assessment_types.items %}
+
+                                    <th
+                                        colspan="{{ type_data.assessments|length|add:'1' }}"
+                                        class="text-center"
+                                    >
+                                        {{ type_name }}
+                                    </th>
+
+                                {% endfor %}
+
+                            {% endfor %}
+
+                        </tr>
+
+
+                        <!-- ASSESSMENT NAMES -->
+
+                        <tr>
+
+                            {% for item in rows.0.results %}
+
+                                {% for type_name, type_data in item.result.assessment_types.items %}
+
+                                    {% for assessment_score in type_data.assessments %}
+
+                                        <th class="text-center">
+                                            {{ assessment_score.assessment.name }}
+                                        </th>
+
+                                    {% endfor %}
+
+                                    <th class="text-center">
+                                        {{ type_name }} Total
+                                    </th>
+
+                                {% endfor %}
+
+                            {% endfor %}
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for row in rows %}
+
+                            <tr>
+
+                                <td class="text-center">
+                                    {{ forloop.counter }}
+                                </td>
+
+
+                                <td>
+                                    <strong>
+                                        {{ row.student.surname }}
+                                        {{ row.student.first_name }}
+                                    </strong>
+                                </td>
+
+
+                                {% for item in row.results %}
+
+                                    {% for type_name, type_data in item.result.assessment_types.items %}
+
+                                        {% for assessment_score in type_data.assessments %}
+
+                                            <td class="text-center">
+
+                                                {{ assessment_score.score }}
+
+                                                /
+
+                                                {{ assessment_score.assessment.maximum_score }}
+
+                                            </td>
+
+                                        {% endfor %}
+
+
+                                        <td class="text-center">
+
+                                            <strong>
+                                                {{ type_data.weighted_score }}
+                                            </strong>
+
+                                        </td>
+
+                                    {% endfor %}
+
+                                {% endfor %}
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="mt-3">
+
+                <small class="text-muted">
+
+                    Scores are displayed as:
+
+                    <strong>
+                        Student Score / Maximum Score
+                    </strong>
+
+                    Assessment Type totals are weighted according to
+                    the Assessment Type weighting.
+
+                </small>
+
+            </div>
+
+        {% else %}
+
+            <div class="alert alert-info">
+
+                No active students were found in this class.
+
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

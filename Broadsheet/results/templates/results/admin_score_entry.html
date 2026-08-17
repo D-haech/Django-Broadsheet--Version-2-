@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+
+{% block title %}
+Enter Scores
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>Enter Scores</h2>
+
+    <div class="alert alert-info">
+
+        <strong>Session:</strong>
+        {{ session.name }}
+
+        &nbsp;&nbsp;
+
+        <strong>Term:</strong>
+        {{ term.name }}
+
+    </div>
+
+
+    <!-- Selection -->
+
+    <form method="get"
+          class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Class
+            </label>
+
+            <select name="class"
+                    class="form-select"
+                    required>
+
+                <option value="">
+                    -- Select Class --
+                </option>
+
+                {% for school_class in school_classes %}
+
+                    <option value="{{ school_class.id }}"
+                        {% if selected_class == school_class.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ school_class.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Subject
+            </label>
+
+            <select name="subject"
+                    class="form-select"
+                    required>
+
+                <option value="">
+                    -- Select Subject --
+                </option>
+
+                {% for subject in subjects %}
+
+                    <option value="{{ subject.id }}"
+                        {% if selected_subject == subject.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ subject.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Assessment
+            </label>
+
+            <select name="assessment"
+                    class="form-select"
+                    required>
+
+                <option value="">
+                    -- Select Assessment --
+                </option>
+
+                {% for item in assessments %}
+
+                    <option value="{{ item.id }}"
+                        {% if selected_assessment == item.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ item.assessment_type.name }}
+                        - {{ item.name }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="col-12">
+
+            <button type="submit"
+                    class="btn btn-primary">
+
+                Load Students
+
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if assessment %}
+
+        <hr>
+
+        <h4>
+            {{ assessment.assessment_type.name }}
+            - {{ assessment.name }}
+        </h4>
+
+        <p>
+            Maximum Score:
+            <strong>{{ assessment.maximum_score }}</strong>
+        </p>
+
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <input type="hidden"
+                   name="school_class"
+                   value="{{ selected_class }}">
+
+            <input type="hidden"
+                   name="subject"
+                   value="{{ selected_subject }}">
+
+            <input type="hidden"
+                   name="assessment"
+                   value="{{ selected_assessment }}">
+
+
+            <table class="table table-bordered">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            #
+                        </th>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Score
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for student in students %}
+
+                        <tr>
+
+                            <td>
+                                {{ forloop.counter }}
+                            </td>
+
+                            <td>
+                                {{ student.surname }}
+                                {{ student.first_name }}
+                            </td>
+
+                            <td>
+
+                                <input
+                                    type="number"
+                                    name="score_{{ student.id }}"
+                                    class="form-control"
+                                    min="0"
+                                    max="{{ assessment.maximum_score }}"
+                                    step="0.01"
+                                >
+
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td colspan="3"
+                                class="text-center">
+
+                                No active students found
+                                in this class.
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+
+            {% if students %}
+
+                <button type="submit"
+                        class="btn btn-success">
+
+                    Save Scores
+
+                </button>
+
+            {% endif %}
+
+        </form>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

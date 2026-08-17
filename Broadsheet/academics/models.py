@@ -17,9 +17,6 @@ class Session(models.Model):
         return self.name
 
 
-from academics.models import Session
-
-
 class Term(models.Model):
 
     school = models.ForeignKey("schools.School", on_delete=models.CASCADE)

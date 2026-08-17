@@ -1,6 +1,7 @@
 from django import forms
 
 from .models import AssessmentType, Assessment
+from django import forms
 
 
 
@@ -39,5 +40,10 @@ class AssessmentForm(forms.ModelForm):
         ].queryset.filter(school=school)
 
 
+class BulkScoreEntryForm(forms.Form):
 
+    subject = forms.IntegerField(widget=forms.HiddenInput)
 
+    term = forms.IntegerField(widget=forms.HiddenInput)
+
+    assessment = forms.IntegerField(widget=forms.HiddenInput)

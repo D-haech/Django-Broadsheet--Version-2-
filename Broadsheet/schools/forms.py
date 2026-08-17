@@ -65,15 +65,47 @@ class TeacherForm(forms.ModelForm):
 
 class TeacherUpdateForm(forms.ModelForm):
 
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField()
+
     class Meta:
 
         model = Teacher
 
         fields = [
+            "first_name",
+            "last_name",
+            "email",
             "phone",
             "address",
             "date_employed",
         ]
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.fields["first_name"].initial = self.instance.user.first_name
+        self.fields["last_name"].initial = self.instance.user.last_name
+        self.fields["email"].initial = self.instance.user.email
+
+    def save(self, commit=True):
+
+        teacher = super().save(commit=False)
+
+        user = teacher.user
+
+        user.first_name = self.cleaned_data["first_name"]
+        user.last_name = self.cleaned_data["last_name"]
+        user.email = self.cleaned_data["email"]
+
+        user.save()
+
+        if commit:
+            teacher.save()
+
+        return teacher
 
 
 class TeacherClassForm(forms.ModelForm):
@@ -97,8 +129,6 @@ class TeacherClassForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["classes"].queryset = SchoolClass.objects.filter(school=school)
-
-
 
 
 class TeachingAssignmentForm(forms.ModelForm):

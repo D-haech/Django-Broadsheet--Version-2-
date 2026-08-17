@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}
+Summary Broadsheet
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <h2>Summary Broadsheet</h2>
+
+    <div class="mb-3">
+
+        <strong>Session:</strong>
+        {{ session.name }}
+
+        &nbsp;&nbsp;&nbsp;
+
+        <strong>Term:</strong>
+        {{ term.name }}
+
+    </div>
+
+
+    <form method="get" class="row g-3 mb-4">
+
+        <div class="col-md-5">
+
+            <label class="form-label">
+                Class
+            </label>
+
+            <select
+                name="class"
+                class="form-select"
+                required
+            >
+
+                <option value="">
+                    -- Select Class --
+                </option>
+
+                {% for school_class in school_classes %}
+
+                    <option
+                        value="{{ school_class.id }}"
+                        {% if selected_class and selected_class.id == school_class.id %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ school_class.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="col-md-3 d-flex align-items-end">
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+                View Broadsheet
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if selected_class %}
+
+        <h4 class="mb-3">
+            {{ selected_class.name }}
+        </h4>
+
+
+        {% if rows %}
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-striped">
+
+                    <thead>
+
+                        <tr>
+
+                            <th rowspan="2">
+                                #
+                            </th>
+
+                            <th rowspan="2">
+                                Student
+                            </th>
+
+                            {% for item in rows.0.results %}
+
+                                <th
+                                    colspan="4"
+                                    class="text-center"
+                                >
+                                    {{ item.subject.name }}
+                                </th>
+
+                            {% endfor %}
+
+                            <th rowspan="2">
+                                Grand Total
+                            </th>
+
+                        </tr>
+
+
+                        <tr>
+
+                            {% for item in rows.0.results %}
+
+                                <th>
+                                    CA1
+                                </th>
+
+                                <th>
+                                    CA2
+                                </th>
+
+                                <th>
+                                    Exam
+                                </th>
+
+                                <th>
+                                    Total
+                                </th>
+
+                            {% endfor %}
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for row in rows %}
+
+                            <tr>
+
+                                <td>
+                                    {{ forloop.counter }}
+                                </td>
+
+
+                                <td>
+                                    <strong>
+                                        {{ row.student.surname }}
+                                        {{ row.student.first_name }}
+                                    </strong>
+                                </td>
+
+
+                                {% for item in row.results %}
+
+                                    <td>
+                                        {% for key, value in item.result.assessment_types.items %}
+
+                                            {% if key == "CA1" %}
+                                                {{ value.weighted_score }}
+                                            {% endif %}
+
+                                        {% empty %}
+                                            0
+                                        {% endfor %}
+                                    </td>
+
+
+                                    <td>
+                                        {% for key, value in item.result.assessment_types.items %}
+
+                                            {% if key == "CA2" %}
+                                                {{ value.weighted_score }}
+                                            {% endif %}
+
+                                        {% empty %}
+                                            0
+                                        {% endfor %}
+                                    </td>
+
+
+                                    <td>
+                                        {% for key, value in item.result.assessment_types.items %}
+
+                                            {% if key == "Exam" %}
+                                                {{ value.weighted_score }}
+                                            {% endif %}
+
+                                        {% empty %}
+                                            0
+                                        {% endfor %}
+                                    </td>
+
+
+                                    <td>
+                                        <strong>
+                                            {{ item.result.total }}
+                                        </strong>
+                                    </td>
+
+                                {% endfor %}
+
+
+                                <td>
+                                    <strong>
+                                        {{ row.grand_total }}
+                                    </strong>
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% else %}
+
+            <div class="alert alert-info">
+                No active students were found in this class.
+            </div>
+
+        {% endif %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

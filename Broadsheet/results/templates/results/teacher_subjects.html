@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Subjects
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">My Subjects</h2>
+
+    <!-- Current Academic Period -->
+
+    <div class="card mb-4">
+
+        <div class="card-header">
+            <strong>Current Academic Period</strong>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <strong>Academic Session:</strong>
+
+                    {% if current_session %}
+                        {{ current_session.name }}
+                    {% else %}
+                        <span class="text-danger">
+                            No current session has been set.
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <strong>Current Term:</strong>
+
+                    {% if current_term %}
+                        {{ current_term.name }}
+                    {% else %}
+                        <span class="text-danger">
+                            No current term has been set.
+                        </span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Teacher Assignments -->
+
+    <h4 class="mb-3">My Assigned Subjects</h4>
+
+    {% if assignments %}
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-striped">
+
+                <thead class="table-dark">
+
+                    <tr>
+                        <th>Class</th>
+                        <th>Subject</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for assignment in assignments %}
+
+                        <tr>
+
+                            <td>
+                                {{ assignment.school_class.name }}
+                            </td>
+
+                            <td>
+                                {{ assignment.subject.name }}
+                            </td>
+
+                            <td>
+
+                                <a
+                                    href="{% url 'bulk_score_entry' assignment.id %}"
+                                    class="btn btn-primary btn-sm"
+                                >
+                                    Enter Scores
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            You have not been assigned any subjects yet.
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

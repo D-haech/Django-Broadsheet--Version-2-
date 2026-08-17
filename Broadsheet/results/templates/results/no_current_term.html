@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+No Current Term
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="alert alert-warning">
+
+        <h4 class="alert-heading">
+            No Current Term Available
+        </h4>
+
+        <p>
+            There is currently no active term for the session
+            <strong>{{ session.name }}</strong>.
+        </p>
+
+        <p>
+            Please contact your school administrator to create
+            a term for this session and mark it as the current term.
+        </p>
+
+        <hr>
+
+        <a href="{% url 'teacher_subjects' %}"
+           class="btn btn-primary">
+            Back to My Subjects
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
