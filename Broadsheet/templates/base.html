@@ -124,7 +124,7 @@
 
                             <li>
                                 <a class="dropdown-item"
-                                   href="#">
+                                   href="{% url 'complete_broadsheet' %}">
                                     Broadsheet
                                 </a>
                             </li>
@@ -140,12 +140,35 @@
 
                     </li>
 
-                    <li class="nav-item">
-                        <a href="{% url 'change_password' %}"
-                           class="nav-link">
-                            Change Password
-                        </a>
-                    </li>
+                    <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+        <i class="fas fa-cog"></i> Settings
+    </a>
+    <ul class="dropdown-menu">
+        <li>
+            <a class="dropdown-item" href="{% url 'school_settings' %}">
+                <i class="fas fa-school"></i> School Profile
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{% url 'upload_logo' %}">
+                <i class="fas fa-image"></i> Upload Logo
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item" href="{% url 'grade_system_list' %}">
+                <i class="fas fa-graduation-cap"></i> Grading System
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item" href="{% url 'change_password' %}">
+                <i class="fas fa-key"></i> Change Password
+            </a>
+        </li>
+    </ul>
+</li>
 
                 </ul>
 
@@ -174,11 +197,18 @@
 
         {% endif %}
 
-        <span class="text-white me-3">
-
-            {{ request.user.school.name }}
-
-        </span>
+       <!-- In the navbar section, find where school name is displayed -->
+<span class="text-white me-3 d-flex align-items-center">
+    {% if request.user.school.logo %}
+        <img src="{{ request.user.school.logo.url }}" 
+             alt="{{ request.user.school.name }}" 
+             style="height: 30px; width: 30px; object-fit: contain; margin-right: 8px; border-radius: 4px;">
+    {% else %}
+        <i class="fas fa-school me-1"></i>
+    {% endif %}
+    {{ request.user.school.name }}
+</span>
+</span>
 
         <form method="post"
               action="{% url 'logout' %}">

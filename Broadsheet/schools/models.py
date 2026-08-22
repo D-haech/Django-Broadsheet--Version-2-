@@ -3,25 +3,48 @@ from accounts.models import User
 
 
 # Create your models here.
+# schools/models.py
+# schools/models.py
+from django.db import models
+from accounts.models import User
+import os
+
+
 class School(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
-
     email = models.EmailField()
     phone = models.CharField(max_length=20)
-
     address = models.TextField()
-
     is_active = models.BooleanField(default=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     expiry_date = models.DateField(blank=True, null=True)
+
+    # Logo fields
+    logo = models.ImageField(
+        upload_to="school_logos/",
+        null=True,
+        blank=True,
+        help_text="Upload your school logo for display on results",
+    )
+    motto = models.CharField(
+        max_length=255, blank=True, null=True, help_text="School motto or slogan"
+    )
+    website = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ["name"]
+
+    def logo_url(self):
+        """
+        Returns the URL of the logo or a default placeholder
+        """
+        if self.logo and hasattr(self.logo, "url"):
+            return self.logo.url
+        return None
 
 
 class Teacher(models.Model):

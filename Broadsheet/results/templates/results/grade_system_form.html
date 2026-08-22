@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} Grading System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-graduation-cap"></i>
+                        {% if form.instance.pk %}Edit{% else %}Create{% endif %} Grading System
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">System Name</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="text-danger small">{{ form.name.errors }}</div>
+                            {% endif %}
+                            <div class="form-text">e.g., "Primary School Grading" or "Secondary School Grading"</div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.is_active }}
+                            <label for="{{ form.is_active.id_for_label }}" class="form-check-label">
+                                Active Grading System
+                            </label>
+                            <div class="form-text">Only one grading system can be active at a time. This will be used for all results.</div>
+                        </div>
+                        
+                        <hr>
+                        <h5 class="mb-3">Grade Configuration</h5>
+                        <p class="text-muted small">
+                            <i class="fas fa-info-circle"></i> 
+                            After creating the grading system, you'll be able to add individual grades.
+                        </p>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'grade_system_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> 
+                                {% if form.instance.pk %}Update{% else %}Create{% endif %} System
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            {% if form.instance.pk and form.instance.grades.exists %}
+                <div class="card mt-4">
+                    <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-list"></i> Existing Grades</h5>
+                        <a href="{% url 'grade_create' form.instance.pk %}" class="btn btn-light btn-sm">
+                            <i class="fas fa-plus"></i> Add Grade
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Grade</th>
+                                        <th>Min Score</th>
+                                        <th>Max Score</th>
+                                        <th>Remark</th>
+                                        <th>Points</th>
+                                        <th>Position</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for grade in form.instance.grades.all %}
+                                        <tr>
+                                            <td><strong>{{ grade.grade }}</strong></td>
+                                            <td>{{ grade.min_score }}</td>
+                                            <td>{{ grade.max_score }}</td>
+                                            <td>{{ grade.remark }}</td>
+                                            <td>{{ grade.points }}</td>
+                                            <td>{{ grade.position }}</td>
+                                            <td>
+                                                <a href="{% url 'grade_update' grade.id %}" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{% url 'grade_delete' grade.id %}" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">No grades added yet</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% elif form.instance.pk %}
+                <div class="card mt-4">
+                    <div class="card-header bg-warning">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> No Grades Added</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p>You haven't added any grades to this system yet.</p>
+                        <a href="{% url 'grade_create' form.instance.pk %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Your First Grade
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

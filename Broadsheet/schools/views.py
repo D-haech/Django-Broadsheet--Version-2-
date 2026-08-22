@@ -12,6 +12,13 @@ from django.views.generic import DeleteView
 from .forms import TeachingAssignmentForm
 from accounts.mixin import SchoolAdminRequiredMixin
 
+from django.views.generic import UpdateView, TemplateView
+
+from django.urls import reverse_lazy
+from django.core.files.storage import default_storage
+from .models import School
+from .decorators import SchoolAdminRequiredMixin
+
 # Create your views here.
 
 
@@ -202,3 +209,38 @@ class TeacherAssignmentDeleteView(LoginRequiredMixin, SchoolAdminRequiredMixin, 
         return reverse_lazy(
             "teacher_assignments", kwargs={"pk": self.object.teacher.pk}
         )
+
+
+# schools Logo Uploads
+
+
+class SchoolSettingsView(LoginRequiredMixin, SchoolAdminRequiredMixin, TemplateView):
+    """View for school settings page with logo upload"""
+
+    template_name = "schools/school_settings.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["school"] = self.request.user.school
+        return context
+
+
+class UploadLogoView(LoginRequiredMixin, SchoolAdminRequiredMixin, UpdateView):
+    """Class-based view for uploading school logo"""
+
+    model = School
+    fields = ["logo"]  # Only allow updating the logo
+    template_name = "schools/upload_logo.html"
+    success_url = reverse_lazy("school_settings")
+
+    def get_object(self, queryset=None):
+        # Get the school associated with the current user
+        return self.request.user.school
+
+    def form_valid(self, form):
+        # Additional validation if needed
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Handle errors gracefully
+        return super().form_invalid(form)

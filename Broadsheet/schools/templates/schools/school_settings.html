@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}School Settings{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2><i class="fas fa-cog"></i> School Settings</h2>
+    <hr>
+    
+    <div class="row">
+        <!-- Logo Section -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-image"></i> School Logo</h5>
+                </div>
+                <div class="card-body text-center">
+                    {% if school.logo %}
+                        <img src="{{ school.logo.url }}" 
+                             alt="{{ school.name }} Logo" 
+                             class="img-fluid mb-3" 
+                             style="max-height: 150px; object-fit: contain;">
+                        <p class="text-success"><i class="fas fa-check-circle"></i> Logo uploaded</p>
+                    {% else %}
+                        <div class="bg-light p-4 rounded mb-3">
+                            <i class="fas fa-school fa-3x text-muted"></i>
+                            <p class="text-muted mt-2">No logo uploaded</p>
+                        </div>
+                    {% endif %}
+                    
+                    <a href="{% url 'upload_logo' %}" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> 
+                        {% if school.logo %}Change Logo{% else %}Upload Logo{% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- School Info Section -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-info-circle"></i> School Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th>School Name:</th>
+                            <td>{{ school.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ school.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone:</th>
+                            <td>{{ school.phone }}</td>
+                        </tr>
+                        <tr>
+                            <th>Address:</th>
+                            <td>{{ school.address }}</td>
+                        </tr>
+                        <tr>
+                            <th>Motto:</th>
+                            <td>{% if school.motto %}{{ school.motto }}{% else %}<span class="text-muted">Not set</span>{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Website:</th>
+                            <td>{% if school.website %}<a href="{{ school.website }}" target="_blank">{{ school.website }}</a>{% else %}<span class="text-muted">Not set</span>{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Status:</th>
+                            <td>
+                                <span class="badge {% if school.is_active %}bg-success{% else %}bg-danger{% endif %}">
+                                    {{ school.is_active|yesno:"Active,Inactive" }}
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

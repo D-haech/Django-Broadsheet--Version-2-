@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Student Result - {{ student.get_full_name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Print Styles */
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+        .card {
+            border: 1px solid #ddd !important;
+            box-shadow: none !important;
+        }
+        .card-header {
+            background-color: #f8f9fa !important;
+            color: #000 !important;
+        }
+        body {
+            background: white !important;
+        }
+        .container {
+            max-width: 100% !important;
+        }
+        .print-only {
+            display: block !important;
+        }
+    }
+    
+    .print-only {
+        display: none;
+    }
+    
+    .result-card {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        background: white;
+    }
+    
+    .school-header {
+        border-bottom: 3px solid #1a56db;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .grade-A { background-color: #d4edda; color: #155724; }
+    .grade-B { background-color: #cce5ff; color: #004085; }
+    .grade-C { background-color: #d1ecf1; color: #0c5460; }
+    .grade-D { background-color: #fff3cd; color: #856404; }
+    .grade-E { background-color: #f8d7da; color: #721c24; }
+    .grade-F { background-color: #f8d7da; color: #721c24; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Result Card -->
+    <div class="result-card" id="result-card">
+        <!-- School Header -->
+        <div class="school-header text-center">
+            <div class="row align-items-center">
+                <div class="col-3 text-start">
+                    {% if school.logo %}
+                        <img src="{{ school.logo.url }}" 
+                             alt="{{ school.name }} Logo" 
+                             style="max-height: 80px; object-fit: contain;">
+                    {% endif %}
+                </div>
+                <div class="col-6">
+                    <h2 class="mb-0">{{ school.name }}</h2>
+                    <p class="text-muted mb-0">{{ school.address }}</p>
+                    <p class="text-muted mb-0">
+                        {{ school.email }} | {{ school.phone }}
+                        {% if school.website %}
+                            | <a href="{{ school.website }}" target="_blank">{{ school.website }}</a>
+                        {% endif %}
+                    </p>
+                    {% if school.motto %}
+                        <p class="font-italic text-secondary mt-1">"{{ school.motto }}"</p>
+                    {% endif %}
+                </div>
+                <div class="col-3 text-end">
+                    <h5 class="text-primary">ACADEMIC REPORT</h5>
+                    <p class="text-muted small">Session: {{ session.name }}</p>
+                    <p class="text-muted small">Term: {{ term.name }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Information -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <table class="table table-borderless">
+                    <tr>
+                        <th style="width: 30%;">Student Name:</th>
+                        <td><strong>{{ student.surname }} {{ student.first_name }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Admission Number:</th>
+                        <td>{{ student.admission_no|default:"N/A" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Class:</th>
+                        <td>{{ student.student_class.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gender:</th>
+                        <td>{{ student.gender }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>Position:</th>
+                        <td>
+                            <span class="badge bg-primary" style="font-size: 1.2em;">
+                                {% if position == 1 %}🥇{% elif position == 2 %}🥈{% elif position == 3 %}🥉{% endif %}
+                                {{ position }}{% if position == 1 %}st{% elif position == 2 %}nd{% elif position == 3 %}rd{% else %}th{% endif %}
+                                / {{ total_students }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Overall Grade:</th>
+                        <td>
+                            <span class="badge grade-{{ overall_grade }}" style="font-size: 1.2em;">
+                                {{ overall_grade }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Overall Remark:</th>
+                        <td><strong>{{ overall_remark }}</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Subject</th>
+                        <th>Total</th>
+                        <th>Grade</th>
+                        <th>Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject_result in subject_results %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><strong>{{ subject_result.subject.name }}</strong></td>
+                            <td>{{ subject_result.total }}</td>
+                            <td>
+                                <span class="badge grade-{{ subject_result.grade }}">
+                                    {{ subject_result.grade }}
+                                </span>
+                            </td>
+                            <td>{{ subject_result.remark }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                <i class="fas fa-info-circle"></i> No results available for this student.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-primary">
+                        <td colspan="2"><strong>SUMMARY</strong></td>
+                        <td><strong>{{ grand_total }} / {{ total_possible }}</strong></td>
+                        <td colspan="2"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>Average Score</strong></td>
+                        <td colspan="3"><strong>{{ percentage }}%</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>Subjects Offered</strong></td>
+                        <td colspan="3"><strong>{{ subject_count }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <!-- Teacher's Comment Section -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="border rounded p-3">
+                    <h6><i class="fas fa-chalkboard-teacher"></i> Teacher's Comment</h6>
+                    <hr>
+                    <p class="text-muted" style="min-height: 60px;">
+                        {% if overall_grade == 'A' or overall_grade == 'B' %}
+                            Excellent performance. Keep up the good work!
+                        {% elif overall_grade == 'C' %}
+                            Good performance. Continue to work hard.
+                        {% elif overall_grade == 'D' %}
+                            Satisfactory. Needs to put in more effort.
+                        {% elif overall_grade == 'E' %}
+                            Below average. Requires improvement.
+                        {% else %}
+                            Needs significant improvement.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="border rounded p-3">
+                    <h6><i class="fas fa-user-tie"></i> Principal's Remark</h6>
+                    <hr>
+                    <div class="text-center" style="min-height: 60px;">
+                        <p class="text-muted">_______________________________</p>
+                        <p class="text-muted small">Signature &amp; Date</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-muted small mt-4 print-only">
+            <p>Generated on: {% now "F j, Y" %}</p>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <!-- In student_result.html, just use the Print button -->
+    <div class="mt-4 text-center no-print">
+        <button onclick="window.print()" class="btn btn-success btn-lg">
+            <i class="fas fa-print"></i> Print / Save as PDF
+        </button>
+        <a href="{% url 'complete_broadsheet' %}?class={{ student.student_class.id }}" class="btn btn-secondary btn-lg">
+            <i class="fas fa-arrow-left"></i> Back to Broadsheet
+        </a>
+    </div>
+</div>
+{% endblock %}

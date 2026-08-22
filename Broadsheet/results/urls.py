@@ -16,7 +16,15 @@ from .views import (
     SummaryBroadsheetView,
     SummaryBroadsheetView,
     CompleteBroadsheetView,
+    GradeSystemListView,
+    GradeSystemCreateView,
+    GradeSystemUpdateView,
+    GradeSystemDeleteView,
+    GradeCreateView,
+    GradeUpdateView,
+    GradeDeleteView,
 )
+from .views import StudentResultView  # Add to imports
 
 urlpatterns = [
     # =========================
@@ -89,4 +97,36 @@ urlpatterns = [
         CompleteBroadsheetView.as_view(),
         name="complete_broadsheet",
     ),
+    path("grade-systems/", GradeSystemListView.as_view(), name="grade_system_list"),
+    path(
+        "grade-systems/create/",
+        GradeSystemCreateView.as_view(),
+        name="grade_system_create",
+    ),
+    path(
+        "grade-systems/<int:pk>/update/",
+        GradeSystemUpdateView.as_view(),
+        name="grade_system_update",
+    ),
+    path(
+        "grade-systems/<int:pk>/delete/",
+        GradeSystemDeleteView.as_view(),
+        name="grade_system_delete",
+    ),
+    # Grades
+    path(
+        "grade-systems/<int:system_pk>/grades/create/",
+        GradeCreateView.as_view(),
+        name="grade_create",
+    ),
+    path("grades/<int:pk>/update/", GradeUpdateView.as_view(), name="grade_update"),
+    path("grades/<int:pk>/delete/", GradeDeleteView.as_view(), name="grade_delete"),
+    path(
+        "student-result/<int:student_id>/",
+        StudentResultView.as_view(),
+        name="student_result",
+    ),
 ]
+
+
+

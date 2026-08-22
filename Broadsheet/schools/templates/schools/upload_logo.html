@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Upload School Logo{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="fas fa-image"></i> Upload School Logo</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Current Logo Display -->
+                        <div class="text-center mb-4">
+                            {% if school.logo %}
+                                <img src="{{ school.logo.url }}" 
+                                     alt="Current Logo" 
+                                     class="img-fluid" 
+                                     style="max-height: 150px; object-fit: contain; border: 2px solid #ddd; border-radius: 8px; padding: 5px;">
+                                <p class="text-success mt-2">
+                                    <i class="fas fa-check-circle"></i> Current Logo
+                                </p>
+                            {% else %}
+                                <div class="bg-light p-5 rounded border">
+                                    <i class="fas fa-school fa-4x text-muted"></i>
+                                    <p class="text-muted mt-3">No logo uploaded yet</p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- File Upload -->
+                        <div class="mb-3">
+                            <label for="id_logo" class="form-label fw-bold">Choose Logo Image</label>
+                            <input type="file" 
+                                   name="logo" 
+                                   accept="image/*" 
+                                   class="form-control" 
+                                   id="id_logo" 
+                                   required>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i> 
+                                    Recommended: Square image (e.g., 200x200px), PNG or JPG format, max size: 2MB
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Preview -->
+                        <div class="mb-3 text-center" id="preview-container" style="display: none;">
+                            <label class="form-label fw-bold">Preview</label>
+                            <div>
+                                <img id="image-preview" 
+                                     src="#" 
+                                     alt="Preview" 
+                                     style="max-height: 100px; border: 1px solid #ddd; border-radius: 4px; padding: 5px;">
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end border-top pt-3">
+                            <a href="{% url 'school_settings' %}" class="btn btn-secondary me-md-2">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-upload"></i> Upload Logo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Preview image before upload
+    document.getElementById('id_logo').addEventListener('change', function(e) {
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('image-preview');
+        
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = 'block';
+            }
+            
+            reader.readAsDataURL(this.files[0]);
+        } else {
+            previewContainer.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}
