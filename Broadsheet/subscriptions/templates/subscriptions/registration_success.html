@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Registration Successful{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow text-center">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle fa-5x text-success"></i>
+                    </div>
+                    <h3 class="mb-3">Registration Successful!</h3>
+                    <p class="text-muted">Your school registration has been submitted.</p>
+                    
+                    <div class="alert alert-info">
+                        <p><strong>Reference:</strong> {{ registration.reference }}</p>
+                        <p><strong>School:</strong> {{ registration.school_name }}</p>
+                        <p><strong>Plan:</strong> {{ registration.plan.name }}</p>
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <p class="mb-0">
+                            <i class="fas fa-envelope"></i> 
+                            A confirmation email has been sent to {{ registration.contact_email }}
+                        </p>
+                    </div>
+                    
+                    <hr>
+                    <a href="{% url 'payment_instructions' registration.reference %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-money-bill-wave"></i> Proceed to Payment
+                    </a>
+                    <br>
+                    <a href="{% url 'pricing' %}" class="btn btn-link mt-2">
+                        <i class="fas fa-home"></i> Return to Plans
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

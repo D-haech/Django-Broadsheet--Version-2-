@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Confirm Payment{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-credit-card"></i> Confirm Payment</h4>
+                </div>
+                <div class="card-body">
+                    {% if rejection_reason %}
+                        <div class="alert alert-danger">
+                            <h6><i class="fas fa-times-circle"></i> Previous Payment Rejected</h6>
+                            <p><strong>Reason:</strong> {{ rejection_reason }}</p>
+                            <p class="mb-0">Please submit your payment details again.</p>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="alert alert-info">
+                        <p><strong>Reference:</strong> {{ registration.reference }}</p>
+                        <p><strong>School:</strong> {{ registration.school_name }}</p>
+                        <p><strong>Plan:</strong> {{ registration.plan.name }} - ₦{{ registration.amount_due }}</p>
+                    </div>
+                    
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                {{ form.amount.label_tag }}
+                                {{ form.amount }}
+                                {% if form.amount.errors %}
+                                    <div class="text-danger small">{{ form.amount.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.payment_date.label_tag }}
+                                {{ form.payment_date }}
+                                {% if form.payment_date.errors %}
+                                    <div class="text-danger small">{{ form.payment_date.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                {{ form.bank_name.label_tag }}
+                                {{ form.bank_name }}
+                                {% if form.bank_name.errors %}
+                                    <div class="text-danger small">{{ form.bank_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                {{ form.transaction_reference.label_tag }}
+                                {{ form.transaction_reference }}
+                                {% if form.transaction_reference.errors %}
+                                    <div class="text-danger small">{{ form.transaction_reference.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                {{ form.payer_name.label_tag }}
+                                {{ form.payer_name }}
+                                {% if form.payer_name.errors %}
+                                    <div class="text-danger small">{{ form.payer_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-12">
+                                {{ form.proof.label_tag }}
+                                {{ form.proof }}
+                                {% if form.proof.errors %}
+                                    <div class="text-danger small">{{ form.proof.errors }}</div>
+                                {% endif %}
+                                <small class="text-muted">Upload a screenshot or photo of your payment (optional but recommended)</small>
+                            </div>
+                            <div class="col-12">
+                                {{ form.additional_note.label_tag }}
+                                {{ form.additional_note }}
+                                {% if form.additional_note.errors %}
+                                    <div class="text-danger small">{{ form.additional_note.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'payment_instructions' registration.reference %}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-paper-plane"></i> Submit Payment Evidence
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

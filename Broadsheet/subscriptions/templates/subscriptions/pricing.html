@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pricing - Class Sphere{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Choose Your Plan</h1>
+        <p class="lead text-muted">Select the perfect plan for your school</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        {% for plan in plans %}
+            <div class="col-md-4">
+                <div class="card h-100 {% if plan.is_default %}border-primary shadow-lg{% else %}border-secondary{% endif %}">
+                    {% if plan.is_default %}
+                        <div class="card-header bg-primary text-white text-center py-2">
+                            <small>MOST POPULAR</small>
+                        </div>
+                    {% else %}
+                        <div class="card-header bg-light text-center py-2">
+                            <small>&nbsp;</small>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{ plan.name }}</h3>
+                        <div class="my-4">
+                            <span class="display-4 fw-bold">₦{{ plan.price }}</span>
+                            <span class="text-muted">/ term</span>
+                        </div>
+                        <p class="card-text text-muted">{{ plan.description }}</p>
+                        <hr>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success"></i>
+                                Up to {{ plan.student_limit }} students
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success"></i>
+                                Up to {{ plan.teacher_limit }} teachers
+                            </li>
+                            {% if plan.has_broadsheet %}
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    Complete Broadsheet
+                                </li>
+                            {% endif %}
+                            {% if plan.has_report_cards %}
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    Report Cards
+                                </li>
+                            {% endif %}
+                            {% if plan.has_analytics %}
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    Analytics Dashboard
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 text-center pb-4">
+                        <a href="{% url 'register_school' %}?plan={{ plan.id }}" class="btn btn-lg {% if plan.is_default %}btn-primary{% else %}btn-outline-primary{% endif %} w-100">
+                            Get Started
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No plans available at the moment. Please check back later.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

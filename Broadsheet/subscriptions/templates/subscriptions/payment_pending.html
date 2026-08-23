@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Payment Under Review{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow text-center">
+                <div class="card-body p-5">
+                    <div class="mb-4">
+                        <i class="fas fa-clock fa-5x text-warning"></i>
+                    </div>
+                    <h3 class="mb-3">Payment Under Review</h3>
+                    <p class="text-muted">Your payment confirmation has been received.</p>
+                    
+                    <div class="alert alert-info">
+                        <p><strong>Reference:</strong> {{ registration.reference }}</p>
+                        <p><strong>Amount:</strong> ₦{{ payment.amount }}</p>
+                        <p><strong>Status:</strong> <span class="badge bg-warning">Pending Verification</span></p>
+                    </div>
+                    
+                    <div class="alert alert-secondary">
+                        <p class="mb-0">Your payment is being verified by our team.</p>
+                        <p class="mb-0 small">You will receive an email once your school is activated.</p>
+                    </div>
+                    
+                    <hr>
+                    <p class="text-muted small">
+                        Reference: {{ payment.reference }}
+                        <br>
+                        Submitted: {{ payment.created_at|date:"F j, Y H:i" }}
+                    </p>
+                    
+                    <a href="{% url 'pricing' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-home"></i> Return to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

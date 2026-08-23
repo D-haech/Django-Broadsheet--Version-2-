@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "academics.apps.AcademicsConfig",
+    "subscriptions.apps.SubscriptionsConfig",
     "accounts.apps.AccountsConfig",
     "core.apps.CoreConfig",
     "dashboard.apps.DashboardConfig",
@@ -121,9 +122,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-
-
-
 # User
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_URL = "login"
@@ -141,3 +139,16 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
+
+# Add these settings
+ADMIN_EMAIL = "osarogie@sabec.com.ng"  # Replace with your email
+SITE_URL = "http://127.0.0.1:8000"  # Replace with your domain in production
+
+# Email settings (if not already configured)
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"  # Or your email provider
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "your-email@gmail.com"  # Replace
+EMAIL_HOST_PASSWORD = "your-password"  # Replace
+DEFAULT_FROM_EMAIL = "Class Sphere <noreply@classsphere.com>"
