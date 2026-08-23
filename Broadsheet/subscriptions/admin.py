@@ -1,5 +1,12 @@
 from django.contrib import admin
 from .models import SubscriptionPlan, SchoolRegistration, Payment, Subscription
+from .models import (
+    SubscriptionPlan,
+    SchoolRegistration,
+    Payment,
+    Subscription,
+    SiteConfig,
+)
 
 # Register your models here.
 
@@ -118,3 +125,40 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_filter = ["status", "plan"]
     search_fields = ["school__name", "school__email"]
     readonly_fields = ["created_at"]
+
+
+# Add at the bottom of the file
+@admin.register(SiteConfig)
+class SiteConfigAdmin(admin.ModelAdmin):
+    list_display = ["bank_name", "account_number", "admin_email", "site_name"]
+    fieldsets = (
+        (
+            "Bank Transfer Details",
+            {
+                "fields": ("bank_name", "account_name", "account_number"),
+                "description": "These details will be shown to schools when they make payment.",
+            },
+        ),
+        (
+            "Contact Information",
+            {
+                "fields": ("admin_email", "support_email", "support_phone"),
+            },
+        ),
+        (
+            "Site Settings",
+            {
+                "fields": ("site_name", "site_url"),
+            },
+        ),
+    )
+
+    def has_add_permission(self, request):
+        # Allow only one configuration
+        if SiteConfig.objects.exists():
+            return False
+        return True
+
+    def has_delete_permission(self, request, obj=None):
+        # Prevent deletion of configuration
+        return False

@@ -254,3 +254,80 @@ class Subscription(models.Model):
         """Get number of days remaining until expiry."""
         delta = self.expiry_date - timezone.now()
         return max(0, delta.days)
+
+
+# subscriptions/models.py - Add this at the end
+
+
+class SiteConfig(models.Model):
+    """
+    Site-wide configuration settings.
+    Admin can manage these from Django admin.
+    """
+
+    # Bank Details
+    bank_name = models.CharField(
+        max_length=100,
+        default="Zenith Bank",
+        help_text="Bank name for payment transfers",
+    )
+    account_name = models.CharField(
+        max_length=100,
+        default="Class Sphere Ltd",
+        help_text="Account name for payment transfers",
+    )
+    account_number = models.CharField(
+        max_length=20,
+        default="1234567890",
+        help_text="Account number for payment transfers",
+    )
+
+    # Contact Details
+    admin_email = models.EmailField(
+        default="admin@classsphere.com", help_text="Email for admin notifications"
+    )
+    support_email = models.EmailField(
+        default="support@classsphere.com", help_text="Support email"
+    )
+    support_phone = models.CharField(
+        max_length=20, blank=True, help_text="Support phone number"
+    )
+
+    # Site Settings
+    site_name = models.CharField(
+        max_length=100, default="Class Sphere", help_text="Site name"
+    )
+    site_url = models.URLField(
+        default="http://127.0.0.1:8000", help_text="Site URL for emails"
+    )
+
+    # Keep only one config record
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Site Configuration"
+        verbose_name_plural = "Site Configurations"
+
+    def __str__(self):
+        return f"Site Configuration"
+
+    @classmethod
+    def get_config(cls):
+        """Get the active site configuration."""
+        config = cls.objects.filter(is_active=True).first()
+        if not config:
+            # Create default config if none exists
+            config = cls.objects.create(is_active=True)
+        return config
+
+    @classmethod
+    def get_bank_details(cls):
+        """Get bank details as a dictionary."""
+        config = cls.get_config()
+        return {
+            "bank_name": config.bank_name,
+            "account_name": config.account_name,
+            "account_number": config.account_number,
+        }

@@ -100,6 +100,8 @@ class RegistrationSuccessView(View):
             },
         )
 
+from .models import SubscriptionPlan, SchoolRegistration, Payment, SiteConfig
+
 
 class PaymentInstructionsView(View):
     """
@@ -125,13 +127,9 @@ class PaymentInstructionsView(View):
             )
             payment_status = payment.status
 
-        # Get bank details from site configuration
-        # For now, we'll use hardcoded values - you can move to a config model later
-        bank_details = {
-            "bank_name": "Zenith Bank",
-            "account_name": "Class Sphere Ltd",
-            "account_number": "1234567890",
-        }
+        # Get bank details from SiteConfig
+        # This replaces the hardcoded values!
+        bank_details = SiteConfig.get_bank_details()
 
         return render(
             request,
